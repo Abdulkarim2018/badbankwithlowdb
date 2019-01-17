@@ -1,0 +1,20 @@
+create accounts
+--------------------------
+curl https://bad-bank-app-project.appspot.com/account/create/peter/peter@mit.edu/one
+curl https://bad-bank-app-project.appspot.com/account/create/john/john@mit.edu/two
+curl https://bad-bank-app-project.appspot.com/account/create/abel/abel@mit.edu/three
+
+get account
+--------------------------
+curl https://bad-bank-app-project.appspot.com/account/get/peter@mit.edu
+
+Account transactions
+--------------------------
+curl https://bad-bank-app-project.appspot.com/account/deposit/peter@mit.edu/100
+curl https://bad-bank-app-project.appspot.com/account/withdraw/peter@mit.edu/10
+curl https://bad-bank-app-project.appspot.com/account/transactions/peter@mit.edu
+
+All Account data
+--------------------------
+curl https://bad-bank-app-project.appspot.com/account/all
+

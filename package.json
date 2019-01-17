@@ -1,0 +1,16 @@
+{
+  "name": "badbanksri",
+  "version": "1.0.0",
+  "description": "bad bank assignment",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sandro.ribolla@hispeed.ch",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "@google-cloud/datastore": "2.0.0"
+  },
+  "devDependencies": {}
+}
