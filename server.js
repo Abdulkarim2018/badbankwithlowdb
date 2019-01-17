@@ -8,9 +8,11 @@ app.use(express.static('public')); //Allow static files
 //setup db
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
- 
 const adapter = new FileSync('db.json')
 const db = low(adapter)
+// Set some defaults
+db.defaults({ accounts: [] })
+  .write();
 
 //Start Server
 const PORT = process.env.PORT || 8080;
@@ -21,137 +23,112 @@ app.listen(process.env.PORT || 8080, () => {
 module.exports = app;
 
 function updateAccount(object) {
-  db.get('account')
-  .find({ email: object.email })
-  .assign({ 
-    name: object.name,
-    balance: object.balance,
-    password: object.password,
-    transactions: object.transactions
-  })
-  .write()
-  .then(() => {
-    console.log("Update Success");
-    return true;
-  });
-  
-  
-  db.get('account')
-  .push(object)
-  .write()
-  .then(() => {
-    console.log("Upsert Success");
-    return true;
-  });
+  db.get('accounts')
+    .find({ email: object.email })
+    .assign({
+      name: object.name,
+      balance: object.balance,
+      password: object.password,
+      transactions: object.transactions
+    })
+    .write()
+    .then(() => {
+      console.log("Update Success");
+      return true;
+    });
+}
+
+function createAccount(object) {
+  db.get('accounts')
+    .push(object)
+    .write();
+
+  return object;
 }
 
 function getAllData() {
-  const query = datastore
-    .createQuery('account')
-  return datastore.runQuery(query);
+  return db.get('accounts').value();
 }
 
-function searchAccountByParamValue(param, value) {
-  const query = datastore
-    .createQuery('account')
-    .filter(param, '=', value);
-  return datastore.runQuery(query);
+function searchAccountByEmail(email) {
+  return db.get('accounts')
+    .find({ email: email })
+    .value();
 }
+
+/*const account_data = {
+  name: "Fritz",
+  email: "Fritz@meee.com",
+  balance: 0,
+  password: "fritz",
+  transactions: []
+};*/
+
+//console.log("Create: " + createAccount(account_data));
+//console.log("All Data: " + getAllData());
+//console.log("Search Data: " + searchAccountByEmail("Fritz@meee.com"));
 
 //***************************** Routes *************************************/
 
-app.get('/', async (req, res, next) => {
-  try {
-    res
-      .status(200)
-      .set('Content-Type', 'text/plain')
-      .send("Navigate to index.html")
-      .end();
-  } catch (error) {
-    next(error);
-  }
+app.get('/', function (req, res) {
+  res
+    .status(200)
+    .set('Content-Type', 'text/plain')
+    .send("Navigate to index.html")
+    .end();
 });
 
-app.get('/account/create/:name/:email/:password', async (req, res, next) => {
-  try {
-    //Data Check - Not empty and not existent
-    var dataCheck = true;
-    var results = await searchAccountByParamValue('email', req.params.email);
-    var entities = results[0];
-    var msg = "";
-    var status = "";
+app.get('/account/create/:name/:email/:password', function (req, res) {
 
-    if (typeof entities != "undefined" && entities != null && entities.length != null && entities.length > 0) {
-      msg = "failure";
-      dataCheck = false;
-      status = 404;
-    }
+  const account_data = {
+    name: req.params.name,
+    email: req.params.email,
+    balance: 0,
+    password: req.params.password,
+    transactions: []
+  };
 
-    if (dataCheck) {
-      const account_data = {
-        name: req.params.name,
-        email: req.params.email,
-        balance: 0,
-        password: req.params.password,
-        transactions: []
-      };
+  createAccount(account_data)
+  var msg = "success"
+  var status = 200;
 
-      const account = {
-        key: datastore.key('account'),
-        data: account_data,
-      };
+  res
+    .status(status)
+    .set('Content-Type', 'text/plain')
+    .send(msg)
+    .end();
+});
 
-      insertOrUpdateAccount(account)
-      msg = "success"
+app.get('/account/login/:email/:password', function (req, res) {
+
+  var account = searchAccountByEmail(req.params.email);
+  var msg = "";
+  var status = "";
+  
+  if (typeof account != "undefined" && account != null) {
+    if (req.params.password == account.password) {
+      msg = account;
       status = 200;
     }
-    res
-      .status(status)
-      .set('Content-Type', 'text/plain')
-      .send(msg)
-      .end();
-  }
-  catch (error) {
-    next(error);
-  }
-});
-
-app.get('/account/login/:email/:password', async (req, res, next) => {
-  try {
-    //Data Check - Existent
-    var dataCheck = true;
-    var results = await searchAccountByParamValue('email', req.params.email);
-    var entities = results[0];
-    var msg = "";
-    var status = "";
-
-    if (typeof entities != "undefined" && entities != null && entities.length != null && entities.length > 0) {
-      if (req.params.password == entities[0].password) {
-        msg = entities[0];
-        status = 200;
-      }
-      else {
-        msg = null;
-        status = 404;
-        console.log("Passwort not match");
-      }
-    }
     else {
-      msg = "failed";
+      msg = null;
       status = 404;
+      console.log("Passwort not match");
     }
+  }
+  else {
+    msg = "failed";
+    status = 404;
+  }
 
-    res
-      .status(status)
-      .set('Content-Type', 'text/plain')
-      .send(msg)
-      .end();
-  }
-  catch (error) {
-    next(error);
-  }
+  res
+    .status(status)
+    .set('Content-Type', 'text/plain')
+    .send(msg)
+    .end();
 });
 
+/*
 app.get('/account/get/:email', async (req, res, next) => {
   try {
     var results = await searchAccountByParamValue('email', req.params.email);
@@ -322,4 +299,4 @@ app.get('/account/balance/:email', async (req, res, next) => {
   catch (error) {
     next(error);
   }
-});
+});*/

@@ -1,0 +1,116 @@
+{
+  "accounts": [
+    {
+      "name": "Fritz",
+      "email": "Fritz@meee.com",
+      "balance": 0,
+      "password": "fritz",
+      "transactions": []
+    },
+    {
+      "name": "Fritz",
+      "email": "Fritz@meee.com",
+      "balance": 0,
+      "password": "fritz",
+      "transactions": []
+    },
+    {
+      "name": "Fritz",
+      "email": "Fritz@meee.com",
+      "balance": 0,
+      "password": "fritz",
+      "transactions": []
+    },
+    {
+      "name": "Fritz",
+      "email": "Fritz@meee.com",
+      "balance": 0,
+      "password": "fritz",
+      "transactions": []
+    },
+    {
+      "name": "Fritz",
+      "email": "Fritz@meee.com",
+      "balance": 0,
+      "password": "fritz",
+      "transactions": []
+    },
+    {
+      "name": ":Sandro",
+      "email": ":juhuu",
+      "balance": 0,
+      "password": ":sandro'",
+      "transactions": []
+    },
+    {
+      "name": "Fritz",
+      "email": "Fritz@meee.com",
+      "balance": 0,
+      "password": "fritz",
+      "transactions": []
+    },
+    {
+      "name": ":Sandro",
+      "email": ":juhuu",
+      "balance": 0,
+      "password": ":sandro'",
+      "transactions": []
+    },
+    {
+      "name": "Fritz",
+      "email": "Fritz@meee.com",
+      "balance": 0,
+      "password": "fritz",
+      "transactions": []
+    },
+    {
+      "name": ":Sandro",
+      "email": ":juhuu",
+      "balance": 0,
+      "password": ":sandro'",
+      "transactions": []
+    },
+    {
+      "name": "Fritz",
+      "email": "Fritz@meee.com",
+      "balance": 0,
+      "password": "fritz",
+      "transactions": []
+    },
+    {
+      "name": ":Sandro",
+      "email": ":juhuu",
+      "balance": 0,
+      "password": ":sandro'",
+      "transactions": []
+    },
+    {
+      "name": "Fritz",
+      "email": "Fritz@meee.com",
+      "balance": 0,
+      "password": "fritz",
+      "transactions": []
+    },
+    {
+      "name": ":Sandro",
+      "email": ":juhuu",
+      "balance": 0,
+      "password": ":sandro'",
+      "transactions": []
+    },
+    {
+      "name": ":noe",
+      "email": ":noe",
+      "balance": 0,
+      "password": ":noe'",
+      "transactions": []
+    },
+    {
+      "name": "noe",
+      "email": "noe",
+      "balance": 0,
+      "password": "noe",
+      "transactions": []
+    }
+  ]
+}
