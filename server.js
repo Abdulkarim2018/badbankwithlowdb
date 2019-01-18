@@ -2,7 +2,6 @@
 'use strict';
 const express = require('express');
 const app = express();
-//app.enable('trust proxy'); //Security
 app.use(express.static('public')); //Allow static files
 
 //setup db
@@ -32,10 +31,9 @@ function updateAccount(object) {
       transactions: object.transactions
     })
     .write()
-    .then(() => {
-      console.log("Update Success");
-      return true;
-    });
+
+  console.log("Update Success");
+  return true;
 }
 
 function createAccount(object) {
@@ -104,7 +102,7 @@ app.get('/account/login/:email/:password', function (req, res) {
   var account = searchAccountByEmail(req.params.email);
   var msg = "";
   var status = "";
-  
+
   if (typeof account != "undefined" && account != null) {
     if (req.params.password == account.password) {
       msg = account;
@@ -128,175 +126,152 @@ app.get('/account/login/:email/:password', function (req, res) {
     .end();
 });
 
-/*
-app.get('/account/get/:email', async (req, res, next) => {
-  try {
-    var results = await searchAccountByParamValue('email', req.params.email);
-    var entities = results[0];
-    var msg = "";
-    var status = "";
 
-    if (typeof entities != "undefined" && entities != null && entities.length != null && entities.length > 0) {
-      msg = entities[0];
-      status = 200;
-    }
-    else {
-      msg = "failure";
-      status = 404;
-    }
+app.get('/account/get/:email', function (req, res) {
 
-    res
-      .status(status)
-      .set('Content-Type', 'text/plain')
-      .send(msg)
-      .end();
+  var account = searchAccountByEmail(req.params.email);
+  var msg = "";
+  var status = "";
+
+  if (typeof account != "undefined" && account != null) {
+    msg = account;
+    status = 200;
   }
-  catch (error) {
-    next(error);
+  else {
+    msg = "failure";
+    status = 404;
   }
-});
 
-app.get('/account/deposit/:email/:amount', async (req, res, next) => {
-  try {
-    var results = await searchAccountByParamValue('email', req.params.email);
-    var entities = results[0];
-    var msg = "";
-    var status = "";
+  res
+    .status(status)
+    .set('Content-Type', 'text/plain')
+    .send(msg)
+    .end();
+}
+);
 
-    if (typeof entities != "undefined" && entities != null && entities.length != null && entities.length > 0) {
-      entities[0].balance = Number(entities[0].balance) + Number(req.params.amount); //Add to balance
-      entities[0].transactions.push({ type: "deposit", amount: req.params.amount }); //Add transaction to account
-      insertOrUpdateAccount(entities[0]);
-      msg = "success";
-      status = 200;
-    }
+app.get('/account/deposit/:email/:amount', function (req, res) {
 
-    else {
-      msg = "failure";
-      status = 404;
-    }
+  var account = searchAccountByEmail(req.params.email);
+  var msg = "";
+  var status = "";
 
-    res
-      .status(status)
-      .set('Content-Type', 'text/plain')
-      .send(msg)
-      .end();
+  if (typeof account != "undefined" && account != null) {
+    account.balance = Number(account.balance) + Number(req.params.amount); //Add to balance
+    account.transactions.push({ type: "deposit", amount: req.params.amount }); //Add transaction to account
+    updateAccount(account);
+    msg = "success";
+    status = 200;
   }
-  catch (error) {
-    next(error);
+
+  else {
+    msg = "failure";
+    status = 404;
   }
-});
 
-app.get('/account/withdraw/:email/:amount', async (req, res, next) => {
-  try {
-    var results = await searchAccountByParamValue('email', req.params.email);
-    var entities = results[0];
-    var msg = "";
-    var status = "";
+  res
+    .status(status)
+    .set('Content-Type', 'text/plain')
+    .send(msg)
+    .end();
+}
+);
 
-    if (typeof entities != "undefined" && entities != null && entities.length != null && entities.length > 0) {
-      entities[0].balance = Number(entities[0].balance) - Number(req.params.amount); //Withdraw from balance
-      entities[0].transactions.push({ type: "withdraw", amount: req.params.amount }); //Add transaction to account
-      insertOrUpdateAccount(entities[0]);
-      msg = "success";
-      status = 200;
-    }
 
-    else {
-      msg = "failure";
-      status = 404;
-    }
+app.get('/account/withdraw/:email/:amount', function (req, res) {
 
-    res
-      .status(status)
-      .set('Content-Type', 'text/plain')
-      .send(msg)
-      .end();
+  var account = searchAccountByEmail(req.params.email);
+  var msg = "";
+  var status = "";
+
+  if (typeof account != "undefined" && account != null) {
+    account.balance = Number(account.balance) - Number(req.params.amount); //Withdraw from balance
+    account.transactions.push({ type: "withdraw", amount: req.params.amount }); //Add transaction to account
+    updateAccount(account);
+    msg = "success";
+    status = 200;
   }
-  catch (error) {
-    next(error);
+
+  else {
+    msg = "failure";
+    status = 404;
   }
-});
 
-app.get('/account/transactions/:email', async (req, res, next) => {
-  try {
-    const results = await searchAccountByParamValue('email', req.params.email);
-    const entities = results[0];
-    var msg = "";
-    var status = "";
+  res
+    .status(status)
+    .set('Content-Type', 'text/plain')
+    .send(msg)
+    .end();
+}
+);
 
-    if (typeof entities != "undefined" && entities != null && entities.length != null && entities.length > 0) {
-      msg = entities[0].transactions; //return transactions array
-      status = 200;
-    }
-    else {
-      msg = "failure";
-      status = 404;
-    }
 
-    res
-      .status(status)
-      .set('Content-Type', 'text/plain')
-      .send(msg)
-      .end();
+app.get('/account/transactions/:email', function (req, res) {
+
+  var account = searchAccountByEmail(req.params.email);
+  var msg = "";
+  var status = "";
+
+  if (typeof account != "undefined" && account != null) {
+    msg = account.transactions; //return transactions array
+    status = 200;
   }
-  catch (error) {
-    next(error);
+  else {
+    msg = "failure";
+    status = 404;
   }
-});
 
-app.get('/account/all', async (req, res, next) => {
+  res
+    .status(status)
+    .set('Content-Type', 'text/plain')
+    .send(msg)
+    .end();
+}
+);
 
-  try {
-    var results = await getAllData();
-    var entities = results[0];
-    var msg = "";
-    var status = "";
+app.get('/account/all', function (req, res) {
 
-    if (typeof entities != "undefined" && entities != null && entities.length != null && entities.length > 0) {
-      msg = entities;
-      status = 200;
-    }
-    else {
-      msg = "failure";
-      status = 404;
-    }
+  var account = getAllData();
+  var msg = "";
+  var status = "";
 
-    res
-      .status(status)
-      .set('Content-Type', 'text/plain')
-      .send(msg)
-      .end();
+  if (typeof account != "undefined" && account != null) {
+    msg = account;
+    status = 200;
   }
-  catch (error) {
-    next(error);
+  else {
+    msg = "failure";
+    status = 404;
   }
-});
 
-app.get('/account/balance/:email', async (req, res, next) => {
-  try {
-    const results = await searchAccountByParamValue('email', req.params.email);
-    const entities = results[0];
-    var msg = "";
-    var status = "";
+  res
+    .status(status)
+    .set('Content-Type', 'text/plain')
+    .send(msg)
+    .end();
+}
+);
 
-    if (typeof entities != "undefined" && entities != null && entities.length != null && entities.length > 0) {
-      const balance = entities[0].balance;
-      msg = balance.toString();
-      status = 200;
-    }
-    else {
-      msg = "failure";
-      status = 404;
-    }
+app.get('/account/balance/:email', function (req, res) {
 
-    res
-      .status(status)
-      .set('Content-Type', 'text/plain')
-      .send(msg)
-      .end();
+  var account = searchAccountByEmail(req.params.email);
+  var msg = "";
+  var status = "";
+
+  if (typeof account != "undefined" && account != null) {
+    var balance = account.balance;
+    msg = balance.toString();
+    status = 200;
   }
-  catch (error) {
-    next(error);
+  else {
+    msg = "failure";
+    status = 404;
   }
-});*/
+
+  res
+    .status(status)
+    .set('Content-Type', 'text/plain')
+    .send(msg)
+    .end();
+}
+);

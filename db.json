@@ -110,6 +110,49 @@
       "email": "noe",
       "balance": 0,
       "password": "noe",
+      "transactions": [
+        {
+          "type": "deposit",
+          "amount": "300"
+        },
+        {
+          "type": "deposit",
+          "amount": "300"
+        },
+        {
+          "type": "withdraw",
+          "amount": "300"
+        },
+        {
+          "type": "withdraw",
+          "amount": "200"
+        },
+        {
+          "type": "withdraw",
+          "amount": "200"
+        },
+        {
+          "type": "withdraw",
+          "amount": "200"
+        },
+        {
+          "type": "deposit",
+          "amount": "300"
+        }
+      ]
+    },
+    {
+      "name": "Peter",
+      "email": "peter",
+      "balance": 0,
+      "password": "peter",
+      "transactions": []
+    },
+    {
+      "name": "kurt",
+      "email": "kurt",
+      "balance": 0,
+      "password": "kurt",
       "transactions": []
     }
   ]
